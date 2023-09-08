@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import axios from 'axios';
+
 import send from './assets/send.svg';
 import user from './assets/user.png';
 import bot from './assets/bot.png';
@@ -13,9 +15,21 @@ function App() {
   const [input, setInput] = useState("");
   const [posts, setPosts] = useState([]);
 
+  const fetchBotResponse = async () => {
+    const { data } = await axios.post("http://localhost:4000", { input }, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return data;
+  }
+
   const onSubmit = () => {
     if (input.trim() === "") return;
     updatePosts(input);
+    fetchBotResponse().then((resp)=> {
+      console.log(resp);  
+    });
   }
 
   const updatePosts = (post) => {
